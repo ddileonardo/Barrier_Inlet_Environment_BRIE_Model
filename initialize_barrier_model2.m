@@ -16,7 +16,7 @@ g = 9.81;
 %wave climate parameters
 wave_height = 1; %m
 wave_period = 10; %s
-wave_asym = 0.2;
+wave_asym = 0.8;
 wave_high = 0.2;
 
 %barrier model parameters

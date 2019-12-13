@@ -10,7 +10,7 @@ w_s = R*g*grain_size^2/((18*1e-6)+sqrt(0.75*R*g*(grain_size^3))); %ms-1 church f
 phi = 16*e_s*c_s/(15*pi*R*g); %phi from aleja/ashton and trueba/ashton
 z0 = 2*wave_height/0.78; % minimum depth of integration (very simple approximation of breaking wave depth based on offshore wave height)
 d_sf= 8.9*wave_height; %0.018*wave_height*wave_period*sqrt(g./(R*grain_size)); %depth shoreface m %Hallermeier (1983) or  houston (1995)
-k_sf = (3600*24*365)./(d_sf-z0).*(g^(15/4)*wave_height^5*phi*wave_period^(5/2)/(1024*pi^(5/2)*w_s^2) *(4/11*(1/z0^(11/4)-1/(d_sf^(11/4)))));
+k_sf = (3600*24*365)./(d_sf-z0).*(g^(15/4)*wave_height^5*phi*wave_period^(5/2)/(1024*pi^(5/2)*w_s^2) *(4/11*(1/z0^(11/4)-1/(d_sf^(11/4))))); %integrated shoreline response rate
 s_sf_eq = 3*w_s/4/sqrt(d_sf*g)*(5+3*wave_period^2*g/4/(pi^2)/d_sf); %equilibrium shoreface slope
 wave_cdf = cumsum(4*[wave_asym*wave_high*ones(wave_climl/4,1);wave_asym*(1-wave_high)*ones(wave_climl/4,1);...
     (1-wave_asym)*(1-wave_high)*ones(wave_climl/4,1);(1-wave_asym)*wave_high*ones(wave_climl/4,1)]./wave_climl);
