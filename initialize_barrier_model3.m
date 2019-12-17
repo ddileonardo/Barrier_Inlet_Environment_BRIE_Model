@@ -1,7 +1,7 @@
-function b_struct = initialize_barrier_model2
+function b_struct = initialize_barrier_model3
 %#ok<*NASGU>
 %which modules to run
-name = 'SLR 9 mm/yr and D50 160 um'; 
+name = 'Model Tests'; 
 barrier_model_on = true;
 ast_model_on = true;
 inlet_model_on = true;
@@ -14,16 +14,16 @@ rho_w = 1025; %density water kg/m3
 g = 9.81;
 
 %wave climate parameters
-wave_height = 1; %m
-wave_period = 10; %s
+wave_height = 0.75; %m
+wave_period = 8; %s
 wave_asym = 0.8;
 wave_high = 0.2;
 
 %barrier model parameters
 slr = 9e-3; %sea level rise m/yr
 s_background = 1e-3; %background slope (beta)
-w_b_crit = 200; %critical barrier width m
-h_b_crit = 2; %critical barrier height m
+w_b_crit = 150; %critical barrier width m
+h_b_crit = 1; %critical barrier height m
 Qow_max = 20; %max overwash flux m3/m/yr
 
 z = 10; %initial sea level (m)
