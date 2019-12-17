@@ -38,25 +38,62 @@
 %param = {'dt','dy'}; param1 = [0.01 0.02 0.025 0.05 0.08 0.1 0.2 0.25]; param2 = [1000 800 500 400 250 100 80 50];
 
 %% run_barrier_model
-name = 'drowning_inlet';
-param = {'slr','dummy'}; 
-param1 = [0:1e-3:1e-2]; 
-param2 = [ones(10,1)];
+savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests';
+name = 'Hallemeier Shoreface Depth Tests';
+param = {'slr','grain_size','wave_height','wave_period','h_b_crit'}; 
+param1 = [2e-3,9e-3,9e-3,9e-3,7e-3,5e-3,5e-3,5e-3,9e-3,9e-3,9e-3]; 
+param2 = [2e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4];
+param3 = [1.0,1.0,0.75,0.5,1.0,1.0,1.25,1.0,0.75,0.75,0.75];
+param4 = [10,10,8,6,10,10,10,10,8,6,8];
+param5 = [2,2,2,2,2,2,2,1,1,1,1];
+dt = 0.05;
+dtsave = 2e2;
 
-output = cell(length(param1),length(param2));
-for ii=1:length(param1),
-    parfor jj=1:length(param2),
-        ii
-        jj
-        b_struct = initialize_barrier_model;
-        b_struct.name = name;
+
+output = cell(length(param1));
+for ii=1:length(param1)
+    %parfor jj=1:length(param2)
+        %ii
+        %jj
         
+        b_struct = initialize_barrier_model; %initialize model
+        b_struct.name = name; %set name
+        
+        %Re-set parameters that you want to change
         b_struct.(param{1}) = param1(ii);
-        b_struct.(param{2}) = param2(jj);
+        b_struct.(param{2}) = param2(ii);
+        b_struct.(param{3}) = param3(ii);
+        b_struct.(param{4}) = param4(ii);
+        b_struct.(param{5}) = param5(ii);
         
-        output(ii,jj) = {barrier_model(b_struct)};
+        %run model 
+        b_struct = barrier_model(b_struct);
+        
+        %Calculate retreat rates
+        b_struct = shoreline_retreat_rate(b_struct,dt,dtsave);
+        
+        %save to output matrix
+        output(ii) = {b_struct};
     
-    end
+    %end
 end
 b_struct = initialize_barrier_model;
-save(name,'b_struct','output','param','param1','param2','-v7.3')
+save([savepath '\' name],'b_struct','output','param','param1','param2','-v7.3')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
