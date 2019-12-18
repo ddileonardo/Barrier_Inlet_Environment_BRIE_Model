@@ -12,10 +12,9 @@ z0 = 2*wave_height/0.78; % minimum depth of integration (very simple approximati
 d_sf = 0.018*wave_height*wave_period*sqrt(g./(R*grain_size)); %8.9*wave_height; %depth shoreface m %Hallermeier (1983) or  houston (1995)
 k_sf = (3600*24*365)./(d_sf-z0).*(g^(15/4)*wave_height^5*phi*wave_period^(5/2)/(1024*pi^(5/2)*w_s^2) *(4/11*(1/z0^(11/4)-1/(d_sf^(11/4))))); %integrated shoreline response rate
 s_sf_eq = 3*w_s/4/sqrt(d_sf*g)*(5+3*wave_period^2*g/4/(pi^2)/d_sf); %equilibrium shoreface slope
-wave_cdf = cumsum(4*[wave_asym*wave_high*ones(wave_climl/4,1);wave_asym*(1-wave_high)*ones(wave_climl/4,1);...
-    (1-wave_asym)*(1-wave_high)*ones(wave_climl/4,1);(1-wave_asym)*wave_high*ones(wave_climl/4,1)]./wave_climl);
 wave_pdf = 4*[wave_asym*wave_high*ones(wave_climl/4,1);wave_asym*(1-wave_high)*ones(wave_climl/4,1);...
     (1-wave_asym)*(1-wave_high)*ones(wave_climl/4,1);(1-wave_asym)*wave_high*ones(wave_climl/4,1)]./wave_climl;
+wave_cdf = cumsum(wave_pdf);
 coast_qs = wave_height.^2.4.*(wave_period.^0.2)*3600*365*24*k .*  (cos(AngArray).^1.2) .* sin(AngArray); %m3/yr
 coast_diff = conv(wave_pdf,-(k./(h_b_crit+d_sf)*wave_height^2.4*wave_period^0.2)*365*24*3600 .*  (cos(AngArray).^0.2) .* (1.2*sin(AngArray).^2 - cos(AngArray).^2),'same'); %m2/yr
 
