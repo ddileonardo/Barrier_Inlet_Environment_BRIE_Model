@@ -39,18 +39,19 @@
 
 %% run_barrier_model
 savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests';
-name = 'Hallemeier Shoreface Depth Tests';
-param = {'slr','grain_size','wave_height','wave_period','h_b_crit'}; 
+name = '14 m Shoreface Depth Tests with 100m crit width';
+param = {'slr','grain_size','wave_height','wave_period','h_b_crit','bb_depth'}; 
 param1 = [2e-3,9e-3,9e-3,9e-3,7e-3,5e-3,5e-3,5e-3,9e-3,9e-3,9e-3]; 
 param2 = [2e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4];
 param3 = [1.0,1.0,0.75,0.5,1.0,1.0,1.25,1.0,0.75,0.75,0.75];
 param4 = [10,10,8,6,10,10,10,10,8,6,8];
 param5 = [2,2,2,2,2,2,2,1,1,1,1];
+param6 = 1.5*ones(1,11);
 dt = 0.05;
 dtsave = 2e2;
 
 
-output = cell(length(param1));
+output = cell(length(param1),1);
 for ii=1:length(param1)
     %parfor jj=1:length(param2)
         %ii
@@ -65,6 +66,7 @@ for ii=1:length(param1)
         b_struct.(param{3}) = param3(ii);
         b_struct.(param{4}) = param4(ii);
         b_struct.(param{5}) = param5(ii);
+        b_struct.(param{6}) = param5(ii);
         
         %run model 
         b_struct = barrier_model(b_struct);
@@ -78,7 +80,7 @@ for ii=1:length(param1)
     %end
 end
 b_struct = initialize_barrier_model;
-save([savepath '\' name],'b_struct','output','param','param1','param2','-v7.3')
+save([savepath '\' name],'b_struct','output','param','param1','param2','param3','param4','param5','param6','-v7.3')
 
 
 
