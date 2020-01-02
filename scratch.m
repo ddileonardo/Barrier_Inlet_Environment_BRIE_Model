@@ -42,7 +42,30 @@ coast_qs = wave_height.^2.4.*(wave_period.^0.2)*3600*365*24*k .*  (cos(AngArray)
  for ii = 1:length(obsWaves.hs_in)
      %H^5*T^-5*sinh(k*z)^-5; where k is the wavenumber
      heightPart = obsWaves.hs_in(ii)/length(obsWaves.hs_in);
-     weight = (obsWaves.hs_in(ii)^5).*(obsWaves.per_in^-5)*(sinh(
+     %weight = (obsWaves.hs_in(ii)^5).*(obsWaves.per_in^-5)*(sinh(
      
  
  end
+ 
+ %% 
+%  1.	Shoreface depth – suggest aggregating all of the Beasley data to get 
+%  retreat rates as a function of depth for all of the profiles and regions 
+%  over all times, then plotting a histogram. I think that may make it possible 
+%  to determine a reasonable shoreface depth in the sense that BRIE is using it. 
+%  It doesn’t have to be perfect, but by comparing to your calculated values that
+%  should help figure out what’s going on with your question (1) and what values 
+%  we need to use to be realistic for this coast. (Eventually we may want to look 
+%  at this regionally, but for now I think lumping everything together makes sense).
+%  
+
+for ii = 1:12
+    figure
+    fieldname = ['isobath' num2str(ii)];
+    data = beasley.(fieldname);
+    
+    data(data==0) = NaN;
+    histogram(data)
+    
+end
+
+ 
