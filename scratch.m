@@ -58,9 +58,9 @@ coast_qs = wave_height.^2.4.*(wave_period.^0.2)*3600*365*24*k .*  (cos(AngArray)
 %  at this regionally, but for now I think lumping everything together makes sense).
 %  
 %%%%%%
-%Median retreat rate is between 4 and 10 m/yr
+%Median retreat rate is between 3 and 10 m/yr
 %%%%%%
-
+%load('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\Beasley\beasley.mat')
 
 for ii = 1:12
     figure
@@ -68,12 +68,15 @@ for ii = 1:12
     data = beasley.(fieldname);
     
     data(data==0) = NaN;
-    histogram(data,'BinLimits',[-100 100])
+    histogram(data,40,'BinLimits',[-100 100])
     set(gca,'ylim',[0,1400])
     %plot(data,'.')
     text(-75,1350,['mean = ' num2str(nanmean(data))])
     text(-75,1250,['median = ' num2str(nanmedian(data))])
     text(-75,1150,['mode = ' num2str(mode(round(data)))])
+    title(['isobath ' num2str(-ii)])
+    xlabel('Retreat Rate m/yr')
+    ylabel('bin count')
     
     pause
     
