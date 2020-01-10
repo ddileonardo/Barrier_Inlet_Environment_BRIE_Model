@@ -39,20 +39,19 @@
 
 %% run_barrier_model
 savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests';
-name = '14 m Shoreface Depth Tests with 100m crit width';
-param = {'slr','grain_size','wave_height','wave_period','h_b_crit','bb_depth'}; 
-param1 = [2e-3,9e-3,9e-3,9e-3,7e-3,5e-3,5e-3,5e-3,9e-3,9e-3,9e-3]; 
-param2 = [2e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4];
-param3 = [1.0,1.0,0.75,0.5,1.0,1.0,1.25,1.0,0.75,0.75,0.75];
-param4 = [10,10,8,6,10,10,10,10,8,6,8];
-param5 = [2,2,2,2,2,2,2,1,1,1,1];
-param6 = 1.5*ones(1,11);
+name = 'Retreat Rate Experiment Set 1';
+param = {'slr','grain_size','wave_height','wave_period','h_b_crit'}; 
+paramValues = [9e-3,9e-3,9e-3,9e-3; ...
+    1.6e-4,1.6e-4,1.6e-4,1.6e-4;...
+    1.0,1.0,0.75,0.75;...
+    5,2.5,5,2.5;...
+    2,2,2,2;];
 dt = 0.05;
 dtsave = 2e2;
 
 
 output = cell(length(param1),1);
-for ii=1:length(param1)
+for ii=1:length(paramValues(1,:))%loop on different parameter sets
     %parfor jj=1:length(param2)
         %ii
         %jj
@@ -60,13 +59,10 @@ for ii=1:length(param1)
         b_struct = initialize_barrier_model; %initialize model
         b_struct.name = name; %set name
         
-        %Re-set parameters that you want to change
-        b_struct.(param{1}) = param1(ii);
-        b_struct.(param{2}) = param2(ii);
-        b_struct.(param{3}) = param3(ii);
-        b_struct.(param{4}) = param4(ii);
-        b_struct.(param{5}) = param5(ii);
-        b_struct.(param{6}) = param5(ii);
+        for nn = 1:length(paramValues(:,1)) %loop on diff parameters of 1 set
+            %Re-set parameters that you want to change
+            b_struct.(param{nn}) = paramValues(nn,ii);
+        end
         
         %run model 
         b_struct = barrier_model(b_struct);
