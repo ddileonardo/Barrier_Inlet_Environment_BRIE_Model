@@ -38,19 +38,20 @@
 %param = {'dt','dy'}; param1 = [0.01 0.02 0.025 0.05 0.08 0.1 0.2 0.25]; param2 = [1000 800 500 400 250 100 80 50];
 
 %% run_barrier_model
+clear;clc;close all;
 savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests';
-name = 'Retreat Rate Experiment Set 1';
-param = {'slr','grain_size','wave_height','wave_period','h_b_crit'}; 
-paramValues = [9e-3,9e-3,9e-3,9e-3; ...
-    1.6e-4,1.6e-4,1.6e-4,1.6e-4;...
-    1.0,1.0,0.75,0.75;...
-    5,2.5,5,2.5;...
-    2,2,2,2;];
+name = 'Retreat Rate Experiment Set 3';
+param = {'slr';'grain_size';'wave_height';'wave_period';'h_b_crit'}; 
+paramValues = [9e-3,9e-3,9e-3,9e-3,9e-3,9e-3,9e-3,9e-3; ...
+    1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4;...
+    1.75,1.75,2.0,2.0,2.25,2.25,2.5,2.5;...
+    8,9,8,9,9,10,9,10;...
+    2,2,2,2,2,2,2,2;];
 dt = 0.05;
 dtsave = 2e2;
 
 
-output = cell(length(param1),1);
+output = cell(length(paramValues(1,:)),1);
 for ii=1:length(paramValues(1,:))%loop on different parameter sets
     %parfor jj=1:length(param2)
         %ii
@@ -75,8 +76,8 @@ for ii=1:length(paramValues(1,:))%loop on different parameter sets
     
     %end
 end
-b_struct = initialize_barrier_model;
-save([savepath '\' name],'b_struct','output','param','param1','param2','param3','param4','param5','param6','-v7.3')
+%b_struct = initialize_barrier_model;
+save([savepath '\' name],'b_struct','output','param','paramValues','-v7.3')
 
 
 
