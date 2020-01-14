@@ -40,7 +40,7 @@
 %% run_barrier_model
 clear;clc;close all;
 savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests';
-name = 'Retreat Rate Experiment Set 4';
+name = 'Retreat Rate Experiment lo';
 param = {'slr';'grain_size';'wave_height';'wave_period';'h_b_crit';'ast_model_on';'inlet_model_on'}; 
 paramValues = [9e-3,9e-3,9e-3,9e-3,9e-3,9e-3,9e-3,9e-3; ...
     1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4;...
@@ -48,7 +48,7 @@ paramValues = [9e-3,9e-3,9e-3,9e-3,9e-3,9e-3,9e-3,9e-3; ...
     8,9,8,9,9,10,9,10;...
     2,2,2,2,2,2,2,2;
     1,1,1,1,1,1,1,1;
-    0,0,0,0,0,0,0,0];
+    1,1,1,1,1,1,1,1];
 dt = 0.05;
 dtsave = 2e2;
 
