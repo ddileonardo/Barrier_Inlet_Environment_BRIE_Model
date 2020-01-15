@@ -34,18 +34,39 @@ coast_qs = wave_height.^2.4.*(wave_period.^0.2)*3600*365*24*k .*  (cos(AngArray)
  Qs = dt.*coast_qs(min(wave_climl,max(1,round(wave_climl-wave_ang-(wave_climl./180.*theta)+1))));
  
  %% Ortiz and Ashton 2016
+ Hs = obsWaves.hs_in;
+ T = obsWaves.per_in;
+ z = 20;%meters %%%%%%%%%%%%%Need the depth of the WIS data and maybe to reverse shoal waves.
+ L = 200;%%%%%%%%%%Need wavelength info
+ k = 2*pi/L;
  
  %morphodynamically representative wave conditions
  
- %REDO STARTING WITH THE Hs_strt, etc
- 
- for ii = 1:length(obsWaves.hs_in)
-     %H^5*T^-5*sinh(k*z)^-5; where k is the wavenumber
-     heightPart = obsWaves.hs_in(ii)/length(obsWaves.hs_in);
-     %weight = (obsWaves.hs_in(ii)^5).*(obsWaves.per_in^-5)*(sinh(
+ sum = 0;
+ for ii = 1:length(Hs)
+     
+     weight = (Hs(ii)^5).*(T(ii)^-5)*(sinh(k*z)^-5); %H^5*T^-5*sinh(k*z)^-5; where k is the wavenumber
+     sum = sum + Hs(ii)*weight;
      
  
  end
+ 
+ 
+ weigthedMean = sum/length(Hs);
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  %% 
 %  1.	Shoreface depth – suggest aggregating all of the Beasley data to get 
