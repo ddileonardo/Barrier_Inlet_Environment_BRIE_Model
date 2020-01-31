@@ -40,20 +40,22 @@
 %% run_barrier_model
 clear;clc;close all;
 savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests';
-name = 'Retreat Rate Experiment lo';
+name = 'Sea Level Experiments 17 mm per yr';
 param = {'slr';'grain_size';'wave_height';'wave_period';'h_b_crit';'ast_model_on';'inlet_model_on'}; 
-paramValues = [9e-3,9e-3,9e-3,9e-3,9e-3,9e-3,9e-3,9e-3; ...
+paramValues = [17e-3,17e-3,17e-3,17e-3,17e-3,17e-3,17e-3,17e-3; ...
     1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4,1.6e-4;...
-    1.75,1.75,2.0,2.0,2.25,2.25,2.5,2.5;...
-    8,9,8,9,9,10,9,10;...
-    2,2,2,2,2,2,2,2;
-    1,1,1,1,1,1,1,1;
-    1,1,1,1,1,1,1,1];
+    0.75,1,1.25,1.5,0.75,1,1.25,1.5;...
+    8,8,10,10,8,8,10,10;...
+    1,1,1,1,2,2,2,2;
+    0,0,0,0,0,0,0,0;
+    0,0,0,0,0,0,0,0];
+
+%Set in initialize_barrier_model
 dt = 0.05;
-dtsave = 2e2;
+dtsave = 1e2;
 
 
-output = cell(length(paramValues(1,:)),1);
+%output = cell(length(paramValues(1,:)),1);
 for ii=1:length(paramValues(1,:))%loop on different parameter sets
     %parfor jj=1:length(param2)
         %ii
@@ -74,14 +76,15 @@ for ii=1:length(paramValues(1,:))%loop on different parameter sets
         b_struct = shoreline_retreat_rate(b_struct,dt,dtsave);
         
         %save to output matrix
-        output(ii) = {b_struct};
+        %output(ii) = {b_struct};
+        output.(['paramSet' num2str(ii)]) = b_struct;
     
     %end
 end
-%b_struct = initialize_barrier_model;
+b_struct = initialize_barrier_model;
 save([savepath '\' name],'b_struct','output','param','paramValues','-v7.3')
 
-
+close all
 
 
 
