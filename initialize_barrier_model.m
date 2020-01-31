@@ -42,7 +42,7 @@ ny = 1000; %number of alonghsore sections
 %timestepping
 dt = 0.05; %years
 nt = 1e4;%1e5; %number of timesteps
-dtsave = 2e2; %save spacing
+dtsave = 1e2; %save spacing
 
 
 %alongshore distribution of wave energy
