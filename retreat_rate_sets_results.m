@@ -1,11 +1,16 @@
 %find the median retreat rates for the BRIE experiments
 clc; close all
 
-fdir = dir('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\*.mat');
+resultsPath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR';
+
+fdir = dir([resultsPath '\*.mat']);
+figure('position',[687         489        1137         420])
 
 for n = 1:length(fdir)
     
-    load(['C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\' fdir(n).name]);
+    
+    
+    load([resultsPath '\' fdir(n).name]);
     
     paramSets = fieldnames(output); %fieldnames of each parameter set
     
@@ -33,6 +38,7 @@ for n = 1:length(fdir)
             
         end
         
+        subplot(1,length(paramSets),jj)
         plot(xt_rate_median,'b.')
         hold
         %plot(xt_rate_mean,'co')
@@ -50,24 +56,27 @@ for n = 1:length(fdir)
         legend('shoreface toe','shoreline','location','southeast')
         title(['SLR: ' num2str(paramValues(1,jj)*1000) 'mmyr^-^1  H: ' num2str(paramValues(3,jj)) 'm  T: ' num2str(paramValues(4,jj)) 's  Hb,crit:' num2str(paramValues(5,jj)) 'm'])
         
-        pause
-        clf
+       
         
     end
     
-    save(['C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\' fdir(n).name])
+     pause
+     clf
+    
+    save([resultsPath '\' fdir(n).name])
     
 end
+
 
 %% Plot results all together
 
 %Load output files with unique names
-SLR7 = load('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\Sea Level Experiments 7 mm per yr longshore on.mat');
-SLR9 = load('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\Sea Level Experiments 9 mm per yr longshore on.mat');
-SLR11 = load('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\Sea Level Experiments 11 mm per yr longshore on.mat');
-SLR13 = load('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\Sea Level Experiments 13 mm per yr longshore on.mat');
-SLR15 = load('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\Sea Level Experiments 15 mm per yr longshore on.mat');
-SLR17 = load('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\Sea Level Experiments 17 mm per yr longshore on.mat');
+SLR7 = load([resultsPath '\Sea Level Experiments 7 mm per yr longshore on.mat']);
+SLR9 = load([resultsPath '\Sea Level Experiments 9 mm per yr longshore on.mat']);
+SLR11 = load([resultsPath '\Sea Level Experiments 11 mm per yr longshore on.mat']);
+SLR13 = load([resultsPath '\Sea Level Experiments 13 mm per yr longshore on.mat']);
+SLR15 = load([resultsPath '\Sea Level Experiments 15 mm per yr longshore on.mat']);
+SLR17 = load([resultsPath '\Sea Level Experiments 17 mm per yr longshore on.mat']);
 
 %plot medians for each timestep for each parameter set for each model
 %   output
@@ -77,10 +86,12 @@ SLR17 = load('C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrie
 %%
 h1 = figure; 
 h2 = figure;
+subnum = length(SLR9.paramValues(1,:)); %number of subplots
+
 for m = 1:length(SLR9.paramValues(1,:)) %loop on columns; loop on different parameter sets for same SLR rate
     
     figure(h1)
-    subplot(1,2,m)
+    subplot(1,subnum,m)
     hold on
     
     plot(SLR7.xs_rate_median,'o','color',rgb('blue'))
@@ -110,7 +121,7 @@ for m = 1:length(SLR9.paramValues(1,:)) %loop on columns; loop on different para
     
     %%%%%%%%%%%%%%%%%%%%
     figure(h2)
-    subplot(1,2,m)
+    subplot(1,subnum,m)
     hold on
     
     plot(SLR7.xt_rate_median,'o','color',rgb('blue'))
