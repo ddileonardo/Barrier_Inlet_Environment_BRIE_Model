@@ -8,18 +8,18 @@ figure('position',[687         489        1137         420])
 
 for n = 1:length(fdir)
     
-    
-    
     load([resultsPath '\' fdir(n).name]);
     
     paramSets = fieldnames(output); %fieldnames of each parameter set
     
+    xt_rate_median = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
+    xt_rate_mean = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
+    xs_rate_median = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
+    xs_rate_mean = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
+    
     for jj = 1:length(paramSets)
         
-        xt_rate_median = NaN*ones(size(output.(paramSets{1}).dx_tdt(1,:)));
-        xt_rate_mean = NaN*ones(size(output.(paramSets{1}).dx_tdt(1,:)));
-        xs_rate_median = NaN*ones(size(output.(paramSets{1}).dx_tdt(1,:)));
-        xs_rate_mean = NaN*ones(size(output.(paramSets{1}).dx_tdt(1,:)));
+        
         
         for ii = 1:length(output.(paramSets{1}).dx_tdt(1,:))
             
@@ -28,23 +28,23 @@ for n = 1:length(fdir)
                 break
             end
             
-            xt_rate_median(ii) = double(median(output.(paramSets{jj}).dx_tdt(output.(paramSets{jj}).dx_tdt(:,ii)>0,ii)));
-            xt_rate_mean(ii) = mean(double(output.(paramSets{jj}).dx_tdt(output.(paramSets{jj}).dx_tdt(:,ii)>0,ii)));
+            xt_rate_median(ii,jj) = double(median(output.(paramSets{jj}).dx_tdt(output.(paramSets{jj}).dx_tdt(:,ii)>0,ii)));
+            xt_rate_mean(ii,jj) = mean(double(output.(paramSets{jj}).dx_tdt(output.(paramSets{jj}).dx_tdt(:,ii)>0,ii)));
             
             
-            xs_rate_median(ii) = double(median(output.(paramSets{jj}).dx_sdt(output.(paramSets{jj}).dx_sdt(:,ii)>0,ii)));
-            xs_rate_mean(ii) = mean(double(output.(paramSets{jj}).dx_sdt(output.(paramSets{jj}).dx_sdt(:,ii)>0,ii)));
+            xs_rate_median(ii,jj) = double(median(output.(paramSets{jj}).dx_sdt(output.(paramSets{jj}).dx_sdt(:,ii)>0,ii)));
+            xs_rate_mean(ii,jj) = mean(double(output.(paramSets{jj}).dx_sdt(output.(paramSets{jj}).dx_sdt(:,ii)>0,ii)));
             
             
         end
         
-        subplot(1,length(paramSets),jj)
-        plot(xt_rate_median,'b.')
+        %subplot(1,length(paramSets),jj)
+        subplot(3,3,jj)
+        plot(xt_rate_median(:,jj),'b.')
         hold
+        plot(xs_rate_median(:,jj),'ro')
+        grid on
         %plot(xt_rate_mean,'co')
-        
-        
-        plot(xs_rate_median,'ro')
         %plot(xs_rate_mean,'mo')
         
         plot([10 10],[0 10],'k')
@@ -53,14 +53,18 @@ for n = 1:length(fdir)
         ylabel('Retreat Rate (m/yr)')
         
         set(gca,'ylim',[0 15])
-        legend('shoreface toe','shoreline','location','southeast')
+        if jj == 1
+        legend('shoreface toe','shoreline','location','northwest')
+        end
         title(['SLR: ' num2str(paramValues(1,jj)*1000) 'mmyr^-^1  H: ' num2str(paramValues(3,jj)) 'm  T: ' num2str(paramValues(4,jj)) 's  Hb,crit:' num2str(paramValues(5,jj)) 'm'])
         
        
         
     end
     
+    
      pause
+     print(gcf, '-dpng','-r150',[resultsPath '\Retreat_Rates_' fdir(n).name(1:end-3) 'png'])
      clf
     
     save([resultsPath '\' fdir(n).name])
@@ -84,8 +88,8 @@ SLR17 = load([resultsPath '\Sea Level Experiments 17 mm per yr longshore on.mat'
 %timestep) for each SLR 
 %Put a line at 10 time steps (50 years)
 %%
-h1 = figure; 
-h2 = figure;
+h1 = figure('position',[165         568        1532         420]); 
+h2 = figure('position', [165         568        1532         420]);
 subnum = length(SLR9.paramValues(1,:)); %number of subplots
 
 for m = 1:length(SLR9.paramValues(1,:)) %loop on columns; loop on different parameter sets for same SLR rate
@@ -94,15 +98,15 @@ for m = 1:length(SLR9.paramValues(1,:)) %loop on columns; loop on different para
     subplot(1,subnum,m)
     hold on
     
-    plot(SLR7.xs_rate_median,'o','color',rgb('blue'))
-    plot(SLR9.xs_rate_median,'o','color',rgb('darkred'))
-    plot(SLR11.xs_rate_median,'s','color',rgb('gold'))
-    plot(SLR13.xs_rate_median,'s','color',rgb('black'))
-    plot(SLR15.xs_rate_median,'s','color',rgb('lime'))
-    plot(SLR17.xs_rate_median,'o','color',rgb('cyan'))
+    plot(SLR7.xs_rate_median(:,m),'o','color',rgb('blue'))
+    plot(SLR9.xs_rate_median(:,m),'o','color',rgb('darkred'))
+    plot(SLR11.xs_rate_median(:,m),'s','color',rgb('gold'))
+    plot(SLR13.xs_rate_median(:,m),'s','color',rgb('black'))
+    plot(SLR15.xs_rate_median(:,m),'s','color',rgb('lime'))
+    plot(SLR17.xs_rate_median(:,m),'o','color',rgb('cyan'))
     plot([10 10],[0 10],'k')
     
-    set(gca,'ylim',[0 10])
+    set(gca,'ylim',[0 10],'xlim',[0 70])
     
     title(['Median Xs retreat  H: ' num2str(SLR9.paramValues(3,m)) 'm  T: ' num2str(SLR9.paramValues(4,m)) 's  Hb,crit:' num2str(SLR9.paramValues(5,m)) 'm'])
 
@@ -124,15 +128,15 @@ for m = 1:length(SLR9.paramValues(1,:)) %loop on columns; loop on different para
     subplot(1,subnum,m)
     hold on
     
-    plot(SLR7.xt_rate_median,'o','color',rgb('blue'))
-    plot(SLR9.xt_rate_median,'o','color',rgb('darkred'))
-    plot(SLR11.xt_rate_median,'s','color',rgb('gold'))
-    plot(SLR13.xt_rate_median,'s','color',rgb('black'))
-    plot(SLR15.xt_rate_median,'s','color',rgb('lime'))
-    plot(SLR17.xt_rate_median,'o','color',rgb('cyan'))
+    plot(SLR7.xt_rate_median(:,m),'o','color',rgb('blue'))
+    plot(SLR9.xt_rate_median(:,m),'o','color',rgb('darkred'))
+    plot(SLR11.xt_rate_median(:,m),'s','color',rgb('gold'))
+    plot(SLR13.xt_rate_median(:,m),'s','color',rgb('black'))
+    plot(SLR15.xt_rate_median(:,m),'s','color',rgb('lime'))
+    plot(SLR17.xt_rate_median(:,m),'o','color',rgb('cyan'))
     plot([10 10],[0 10],'k')
     
-    set(gca,'ylim',[0 10])
+    set(gca,'ylim',[0 10],'xlim',[0 70])
     
     title(['Median Xt retreat  H: ' num2str(SLR9.paramValues(3,m)) 'm  T: ' num2str(SLR9.paramValues(4,m)) 's  Hb,crit:' num2str(SLR9.paramValues(5,m)) 'm'])
 
