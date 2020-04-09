@@ -1,79 +1,145 @@
 %find the median retreat rates for the BRIE experiments
-clc; close all
+clc; close all; clear
 
-resultsPath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\GS_125um';
+resultsPath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\';
 
 fdir = dir([resultsPath '\*.mat']);
-figure('position',[-1200         -75        1137     800],'color','w') %single
-            %external monitor to the left of laptop
+
+            
+%% Rates for every SLR condition plotted as grid of subplots
+% figure('position',[-1200         -75        1137     800],'color','w') %single external monitor to the left of laptop
+% for n = 1:length(fdir)
+%     
+%     load([resultsPath '\' fdir(n).name]);
+%     
+%     paramSets = fieldnames(output); %fieldnames of each parameter set
+%     
+%     xt_rate_median = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
+%     xt_rate_mean = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
+%     xs_rate_median = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
+%     xs_rate_mean = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
+%     
+%     for jj = 1:length(paramSets)
+%         
+%         
+%         
+%         for ii = 1:length(output.(paramSets{1}).dx_tdt(1,:))
+%             
+%             if length(output.(paramSets{jj}).dx_tdt(1,:)) == ii %if ii is the last timestep
+%                 %continue
+%             elseif sum(output.(paramSets{jj}).dx_tdt(:,ii+1)) == 0 %if all the rates are zero at the next time step
+%                 %the barrier has drowned, break the loop
+%                 break
+%             end
+%             
+%             xt_rate_median(ii,jj) = double(median(output.(paramSets{jj}).dx_tdt(output.(paramSets{jj}).dx_tdt(:,ii)>0,ii)));
+%             xt_rate_mean(ii,jj) = mean(double(output.(paramSets{jj}).dx_tdt(output.(paramSets{jj}).dx_tdt(:,ii)>0,ii)));
+%             
+%             
+%             xs_rate_median(ii,jj) = double(median(output.(paramSets{jj}).dx_sdt(output.(paramSets{jj}).dx_sdt(:,ii)>0,ii)));
+%             xs_rate_mean(ii,jj) = mean(double(output.(paramSets{jj}).dx_sdt(output.(paramSets{jj}).dx_sdt(:,ii)>0,ii)));
+%             
+%             
+%         end
+%         
+%         %subplot(1,length(paramSets),jj)
+%         subplot(3,3,jj)
+%         plot(xt_rate_median(:,jj),'b.')
+%         hold
+%         plot(xs_rate_median(:,jj),'ro')
+%         grid on
+%         %plot(xt_rate_mean,'co')
+%         %plot(xs_rate_mean,'mo')
+%         
+%         plot([10 10],[0 10],'k')
+%         
+%         xlabel('Timestep (5 yr intervals)')
+%         ylabel('Retreat Rate (m/yr)')
+%         
+%         set(gca,'ylim',[0 15])
+%         if jj == 1
+%         legend('shoreface toe','shoreline','location','northwest')
+%         end
+%         title(['SLR: ' num2str(paramValues(1,jj)*1000) 'mmyr^-^1  H: ' num2str(paramValues(3,jj)) 'm  T: ' num2str(paramValues(4,jj)) 's  Hb,crit:' num2str(paramValues(5,jj)) 'm'])
+%         
+%        
+%         
+%     end
+%     
+%     
+%      pause
+%      img = getframe(gcf);
+%      imwrite(img.cdata, [resultsPath '\Retreat_Rates_' fdir(n).name(1:end-4), '.png']);
+%      %print(gcf, '-dpng','-r150',[resultsPath '\Retreat_Rates_' fdir(n).name(1:end-3) 'png'])
+%      clf
+%     
+%     save([resultsPath '\' fdir(n).name],'b_struct','output','param','paramSets','paramValues','xs_rate_mean','xs_rate_median','xt_rate_mean','xt_rate_median')
+%     
+% end
+
+%% Normalize retreat rates by the baseline rate
+%Find Mean and standard deviation of normalized rates
+
+baseline_name = 'Sea Level Experiments 9 mm per yr longshore on.mat';
+baseline = load([resultsPath '\' baseline_name]); %load baseline model results
 
 for n = 1:length(fdir)
     
-    load([resultsPath '\' fdir(n).name]);
+    load([resultsPath '\' fdir(n).name]); %load individual SLR model experiment
+    
     
     paramSets = fieldnames(output); %fieldnames of each parameter set
     
-    xt_rate_median = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
-    xt_rate_mean = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
-    xs_rate_median = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
-    xs_rate_mean = NaN*ones(length(output.(paramSets{1}).dx_tdt(1,:)),length(paramSets));
     
-    for jj = 1:length(paramSets)
-        
-        
-        
-        for ii = 1:length(output.(paramSets{1}).dx_tdt(1,:))
+    if ~strcmp(fdir(n).name,baseline_name) %Normalizze the baseline because it will add a bunch of extra 1's to the mean
+        for jj = 1:length(paramSets)
+            norm_dxt_rates = []; %holds all the rates for a single SLR experimental run (SLR rate constant)
+            norm_dxs_rates = []; %holds all the rates for a single SLR experimental run (SLR rate constant)
+
+            %make baseline data floating points so it can hold NaN values
+            baseline.output.(paramSets{jj}).dx_tdt = double(baseline.output.(paramSets{jj}).dx_tdt);
+            baseline.output.(paramSets{jj}).dx_sdt = double(baseline.output.(paramSets{jj}).dx_sdt);
             
-            if length(output.(paramSets{jj}).dx_tdt(1,:)) == ii %if ii is the last timestep
-                %continue
-            elseif sum(output.(paramSets{jj}).dx_tdt(:,ii+1)) == 0 %if all the rates are zero at the next time step
-                %the barrier has drowned, break the loop
-                break
-            end
+            %NaN the 0 value retreat rates
+            baseline.output.(paramSets{jj}).dx_tdt(baseline.output.(paramSets{jj}).dx_tdt<1) = NaN;
+            baseline.output.(paramSets{jj}).dx_sdt(baseline.output.(paramSets{jj}).dx_sdt<1) = NaN;
             
-            xt_rate_median(ii,jj) = double(median(output.(paramSets{jj}).dx_tdt(output.(paramSets{jj}).dx_tdt(:,ii)>0,ii)));
-            xt_rate_mean(ii,jj) = mean(double(output.(paramSets{jj}).dx_tdt(output.(paramSets{jj}).dx_tdt(:,ii)>0,ii)));
+            %Remove negative and 0 values from results
+            result_dxt = double(output.(paramSets{jj}).dx_tdt);
+            result_dxt(result_dxt<1) = NaN;
+            result_dxs = double(output.(paramSets{jj}).dx_sdt);
+            result_dxs(result_dxs<1) = NaN;
             
+            %normalize by the base line
+            normalized.output.(paramSets{jj}).dx_tdt = result_dxt ./ baseline.output.(paramSets{jj}).dx_tdt;
+            normalized.output.(paramSets{jj}).dx_sdt = result_dxs ./ baseline.output.(paramSets{jj}).dx_sdt;
             
-            xs_rate_median(ii,jj) = double(median(output.(paramSets{jj}).dx_sdt(output.(paramSets{jj}).dx_sdt(:,ii)>0,ii)));
-            xs_rate_mean(ii,jj) = mean(double(output.(paramSets{jj}).dx_sdt(output.(paramSets{jj}).dx_sdt(:,ii)>0,ii)));
+            %Gather values for taking the mean
+            norm_dxt_rates = [norm_dxt_rates; normalized.output.(paramSets{jj}).dx_tdt(:)];
+            norm_dxs_rates = [norm_dxs_rates; normalized.output.(paramSets{jj}).dx_sdt(:)];
             
+            clear normalized result_dxt result_dxs
             
         end
-        
-        %subplot(1,length(paramSets),jj)
-        subplot(3,3,jj)
-        plot(xt_rate_median(:,jj),'k.')
-        hold
-        plot(xs_rate_median(:,jj),'o','color',rgb('dodgerblue'))
-        grid on
-        %plot(xt_rate_mean,'co')
-        %plot(xs_rate_mean,'mo')
-        
-        plot([10 10],[0 10],'k')
-        
-        xlabel('Timestep (5 yr intervals)')
-        ylabel('Retreat Rate (m/yr)')
-        
-        set(gca,'ylim',[0 15])
-        if jj == 1
-        legend('shoreface toe','shoreline','location','northwest')
-        end
-        title(['SLR: ' num2str(paramValues(1,jj)*1000) 'mmyr^-^1  H: ' num2str(paramValues(3,jj)) 'm  T: ' num2str(paramValues(4,jj)) 's  Hb,crit:' num2str(paramValues(5,jj)) 'm'])
-        
-       
-        
     end
     
+    %alculate the mean and standard deviation
+    mean_dxt = nanmean(norm_dxt_rates);
+    mean_dxs = nanmean(norm_dxt_rates);
     
-     pause
-     img = getframe(gcf);
-     imwrite(img.cdata, [resultsPath '\Retreat_Rates_' fdir(n).name(1:end-4), '.png']);
-     %print(gcf, '-dpng','-r150',[resultsPath '\Retreat_Rates_' fdir(n).name(1:end-3) 'png'])
-     clf
-    
-    save([resultsPath '\' fdir(n).name])
+    stdev_dxt = nanstd(norm_dxt_rates);
+    stdev_dxs = nanstd(norm_dxs_rates);
+    save([resultsPath '\' fdir(n).name],'b_struct','output','param','paramSets','paramValues','xs_rate_mean','xs_rate_median','xt_rate_mean','xt_rate_median','norm_dxt_rates','norm_dxs_rates','mean_dxt','mean_dxs','stdev_dxt','stdev_dxs')
+
+    clear('b_struct','output','param','paramSets','paramValues','xs_rate_mean','xs_rate_median','xt_rate_mean','xt_rate_median','norm_dxt_rates','norm_dxs_rates','mean_dxt','mean_dxs','stdev_dxt','stdev_dxs')
     
 end
 
-return
+
+
+%% Plot normalized rates for each model SLR experiment on 1 plot
+
+%
+
+xlabel('Timestep (5 yr intervals)')
+ylabel('Retreat Rate (m/yr)')
