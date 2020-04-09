@@ -1,10 +1,11 @@
 %find the median retreat rates for the BRIE experiments
 clc; close all
 
-resultsPath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR';
+resultsPath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\GS_125um';
 
 fdir = dir([resultsPath '\*.mat']);
-figure('position',[687         489        1137         420])
+figure('position',[-1200         -75        1137     800],'color','w') %single
+            %external monitor to the left of laptop
 
 for n = 1:length(fdir)
     
@@ -23,7 +24,9 @@ for n = 1:length(fdir)
         
         for ii = 1:length(output.(paramSets{1}).dx_tdt(1,:))
             
-            if sum(output.(paramSets{jj}).dx_tdt(:,ii+1)) == 0 %if all the rates are zero at the next time step
+            if length(output.(paramSets{jj}).dx_tdt(1,:)) == ii %if ii is the last timestep
+                %continue
+            elseif sum(output.(paramSets{jj}).dx_tdt(:,ii+1)) == 0 %if all the rates are zero at the next time step
                 %the barrier has drowned, break the loop
                 break
             end
@@ -40,9 +43,9 @@ for n = 1:length(fdir)
         
         %subplot(1,length(paramSets),jj)
         subplot(3,3,jj)
-        plot(xt_rate_median(:,jj),'b.')
+        plot(xt_rate_median(:,jj),'k.')
         hold
-        plot(xs_rate_median(:,jj),'ro')
+        plot(xs_rate_median(:,jj),'o','color',rgb('dodgerblue'))
         grid on
         %plot(xt_rate_mean,'co')
         %plot(xs_rate_mean,'mo')
@@ -64,130 +67,13 @@ for n = 1:length(fdir)
     
     
      pause
-     print(gcf, '-dpng','-r150',[resultsPath '\Retreat_Rates_' fdir(n).name(1:end-3) 'png'])
+     img = getframe(gcf);
+     imwrite(img.cdata, [resultsPath '\Retreat_Rates_' fdir(n).name(1:end-4), '.png']);
+     %print(gcf, '-dpng','-r150',[resultsPath '\Retreat_Rates_' fdir(n).name(1:end-3) 'png'])
      clf
     
     save([resultsPath '\' fdir(n).name])
     
 end
 
-
-%% Plot results all together
-
-%Load output files with unique names
-SLR7 = load([resultsPath '\Sea Level Experiments 7 mm per yr longshore on.mat']);
-SLR9 = load([resultsPath '\Sea Level Experiments 9 mm per yr longshore on.mat']);
-SLR11 = load([resultsPath '\Sea Level Experiments 11 mm per yr longshore on.mat']);
-SLR13 = load([resultsPath '\Sea Level Experiments 13 mm per yr longshore on.mat']);
-SLR15 = load([resultsPath '\Sea Level Experiments 15 mm per yr longshore on.mat']);
-SLR17 = load([resultsPath '\Sea Level Experiments 17 mm per yr longshore on.mat']);
-
-%plot medians for each timestep for each parameter set for each model
-%   output
-%a single plot should have the median value for 1 parameter set (at every
-%timestep) for each SLR 
-%Put a line at 10 time steps (50 years)
-%%
-h1 = figure('position',[165         568        1532         420]); 
-h2 = figure('position', [165         568        1532         420]);
-subnum = length(SLR9.paramValues(1,:)); %number of subplots
-
-for m = 1:length(SLR9.paramValues(1,:)) %loop on columns; loop on different parameter sets for same SLR rate
-    
-    figure(h1)
-    subplot(1,subnum,m)
-    hold on
-    
-    plot(SLR7.xs_rate_median(:,m),'o','color',rgb('blue'))
-    plot(SLR9.xs_rate_median(:,m),'o','color',rgb('darkred'))
-    plot(SLR11.xs_rate_median(:,m),'s','color',rgb('gold'))
-    plot(SLR13.xs_rate_median(:,m),'s','color',rgb('black'))
-    plot(SLR15.xs_rate_median(:,m),'s','color',rgb('lime'))
-    plot(SLR17.xs_rate_median(:,m),'o','color',rgb('cyan'))
-    plot([10 10],[0 10],'k')
-    
-    set(gca,'ylim',[0 10],'xlim',[0 70])
-    
-    title(['Median Xs retreat  H: ' num2str(SLR9.paramValues(3,m)) 'm  T: ' num2str(SLR9.paramValues(4,m)) 's  Hb,crit:' num2str(SLR9.paramValues(5,m)) 'm'])
-
-    if m == 1
-    legend('7 mm/yr','9 mm/yr', '11 mm/yr','13 mm/yr','15 mm/yr','17 mm/yr','location','southeast')
-    end
-    
-    %if m == 7 || m == 8
-    xlabel('Timestep (5 yr intervals)')
-    
-    %end
-    
-    %if m == 3 || m == 7
-        ylabel('Retreat Rate (m/yr)')
-    %end
-    
-    %%%%%%%%%%%%%%%%%%%%
-    figure(h2)
-    subplot(1,subnum,m)
-    hold on
-    
-    plot(SLR7.xt_rate_median(:,m),'o','color',rgb('blue'))
-    plot(SLR9.xt_rate_median(:,m),'o','color',rgb('darkred'))
-    plot(SLR11.xt_rate_median(:,m),'s','color',rgb('gold'))
-    plot(SLR13.xt_rate_median(:,m),'s','color',rgb('black'))
-    plot(SLR15.xt_rate_median(:,m),'s','color',rgb('lime'))
-    plot(SLR17.xt_rate_median(:,m),'o','color',rgb('cyan'))
-    plot([10 10],[0 10],'k')
-    
-    set(gca,'ylim',[0 10],'xlim',[0 70])
-    
-    title(['Median Xt retreat  H: ' num2str(SLR9.paramValues(3,m)) 'm  T: ' num2str(SLR9.paramValues(4,m)) 's  Hb,crit:' num2str(SLR9.paramValues(5,m)) 'm'])
-
-    if m == 1
-    legend('7 mm/yr','9 mm/yr', '11 mm/yr','13 mm/yr','15 mm/yr','17 mm/yr','location','southeast')
-    end
-    
-    %if m == 7 || m == 8
-    xlabel('Timestep (5 yr intervals)')
-    
-   % end
-    
-    %if m == 3 || m == 7
-        ylabel('Retreat Rate (m/yr)')
-    %end
-    
-    
-end
-
-
-
-
-%% for output format with cells
-%clc; close all
-% for jj = 1:length(output)
-%     
-%         
-%         xt_rate_median(jj) = double(median(output{jj,1}.dx_tdt(output{jj,1}.dx_tdt>0)));
-%         xt_rate_mean(jj) = mean(double(output{jj,1}.dx_tdt(output{jj,1}.dx_tdt>0)));
-%         %fprintf(['shoreface toe rate is ' num2str(median(rate)) '\n'])
-%         
-%         xs_rate_median(jj) = double(median(output{jj,1}.dx_sdt(output{jj,1}.dx_sdt>0)));
-%         xs_rate_mean(jj) = mean(double(output{jj,1}.dx_sdt(output{jj,1}.dx_sdt>0)));
-%         %fprintf(['shoreline rate is ' num2str(median(rate)) '\n'])
-%         
-%         %     for r = 1:length(output{jj,1}.dx_sdt(1,:))
-%         %     s_sf(r) = nanmean(output{jj,1}.d_sf./(double(output{jj,1}.x_s_save(output{jj,1}.dx_sdt(:,r)>0,r))- double(output{jj,1}.x_t_save(output{jj,1}.dx_sdt(:,r)>0,r))));
-%         %
-%         %     end
-%         %fprintf(['shoreface slope is ' num2str(nanmedian(s_sf(:))) '\n'])
-%         
-%         
-% 
-%     
-%     
-% end
-% 
-%         plot(xt_rate_median,'bo')
-%         hold on
-%         plot(xt_rate_mean,'co')
-%         
-%         
-%         plot(xs_rate_median,'ro')
-%         plot(xs_rate_mean,'mo')
+return
