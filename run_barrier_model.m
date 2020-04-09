@@ -39,7 +39,7 @@
 
 %% run_barrier_model
 clear;clc;close all;
-savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\d_sh_10m';
+savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR';
 slr = 17; %mm/yr
 gs = 1.6e-4; %um
 name = ['Sea Level Experiments ' num2str(slr) ' mm per yr longshore on'];
