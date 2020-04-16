@@ -240,7 +240,7 @@ for ii = 1:length(path_list) %make plot for every set of conditions (eg grain si
     title(title_list{ii})
     legend(['shoreline m=  ' num2str(shoreline_fit(1))],['shoreface m= ' num2str(shoreface_fit(1))],'Location','southeast')
 	xlabel('SLR rate (mm/yr)')
-    ylabel('Normalized Retreat Rate')
+    ylabel('Normalized (5mm/yr)Retreat Rate')
     set(gca,'ylim',[0 2],'xlim',[0 20])
 
 end

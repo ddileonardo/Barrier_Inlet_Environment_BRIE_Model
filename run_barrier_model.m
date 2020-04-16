@@ -39,18 +39,20 @@
 
 %% run_barrier_model
 clear;clc;close all;
-savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\GS_100um';
+savepath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\s_back_-4';
 slr = 13; %mm/yr
-gs = 1.00e-4; %um
+gs = 1.60e-4; %um
+slope = 10e-4; %background slope
 name = ['Sea Level Experiments ' num2str(slr) ' mm per yr longshore on'];
-param = {'slr';'grain_size';'wave_height';'wave_period';'h_b_crit';'ast_model_on';'inlet_model_on'}; 
+param = {'slr';'grain_size';'wave_height';'wave_period';'h_b_crit';'ast_model_on';'inlet_model_on';'s_background'}; 
 paramValues = [slr*[1e-3,1e-3,1e-3,1e-3,1e-3,1e-3,1e-3,1e-3,1e-3]; ...
     gs,gs,gs,gs,gs,gs,gs,gs,gs;...
     0.75,1,1.5,0.75,1,1.5,0.75,1,1.5;...
     8,8,10,8,8,10,8,8,10;...
     1,1,1,2,2,2,3,3,3;
     1,1,1,1,1,1,1,1,1;
-    0,0,0,0,0,0,0,0,0];
+    0,0,0,0,0,0,0,0,0
+    slope,slope,slope,slope,slope,slope,slope,slope,slope;
 
 % paramValues = [7e-3,7e-3,7e-3;...
 %     1.6e-4,1.6e-4,1.6e-4;...
