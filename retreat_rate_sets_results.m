@@ -2,14 +2,14 @@
 clc; close all; clear
 
 %%
-resultsPath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR\GS_125um';
+resultsPath = 'C:\Users\ddileonardo\The Water Institute of the Gulf\TO71 - Barrier Island Modeling - General\BRIE_Tests\SLR';
 
 fdir = dir([resultsPath '\*.mat']);
 
             
 %% Rates for every SLR condition plotted as grid of subplots
 figure('position',[-1200         -75        1137     800],'color','w') %single external monitor to the left of laptop
-for n = 1:length(fdir)
+for n = 7%1:length(fdir)
     
     load([resultsPath '\' fdir(n).name]);
     
@@ -70,11 +70,11 @@ for n = 1:length(fdir)
     
      pause
      img = getframe(gcf);
-     imwrite(img.cdata, [resultsPath '\Retreat_Rates_' fdir(n).name(1:end-4), '.png']);
+     %imwrite(img.cdata, [resultsPath '\Retreat_Rates_' fdir(n).name(1:end-4), '.png']);
      %print(gcf, '-dpng','-r150',[resultsPath '\Retreat_Rates_' fdir(n).name(1:end-3) 'png'])
      clf
     
-    save([resultsPath '\' fdir(n).name],'b_struct','output','param','paramSets','paramValues','xs_rate_mean','xs_rate_median','xt_rate_mean','xt_rate_median')
+    %save([resultsPath '\' fdir(n).name],'b_struct','output','param','paramSets','paramValues','xs_rate_mean','xs_rate_median','xt_rate_mean','xt_rate_median')
     
 end
 
