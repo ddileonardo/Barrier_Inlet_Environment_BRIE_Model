@@ -12,7 +12,7 @@
 clc; close all; clear
 region = 'Chandeleuers';
 
-if strcmp(region,'Central Coastl')
+if strcmp(region,'Central Coast')
     %% Plot normalized rates for each model SLR experiment on 1 plot - Central Coast
     m1 = figure('color','w');
     
